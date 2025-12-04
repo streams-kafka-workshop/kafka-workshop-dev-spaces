@@ -1,0 +1,82 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cdc-dashboard
+  labels:
+    app: cdc-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cdc-dashboard
+  template:
+    metadata:
+      labels:
+        app: cdc-dashboard
+    spec:
+      containers:
+      - name: cdc-dashboard
+        image: quay.io/streams-kafka-workshop/cdc-dashboard:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        env:
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "<REPLACE_WITH_KAFKA_BOOTSTRAP_SERVERS>"
+        - name: KAFKA_CONSUMER_GROUP
+          value: "globex-dashboard-v2"
+
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /q/health/live
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /q/health/ready
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cdc-dashboard
+  labels:
+    app: cdc-dashboard
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: cdc-dashboard
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: cdc-dashboard
+  labels:
+    app: cdc-dashboard
+spec:
+  to:
+    kind: Service
+    name: cdc-dashboard
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

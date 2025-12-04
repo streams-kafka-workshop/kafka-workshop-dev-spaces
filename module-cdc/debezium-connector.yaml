@@ -1,0 +1,24 @@
+---
+kind: KafkaConnector
+apiVersion: kafka.strimzi.io/v1beta2
+metadata:
+  name: globex
+  labels:
+    strimzi.io/cluster: "kafka-connect"
+spec:
+  class: io.debezium.connector.postgresql.PostgresConnector
+  tasksMax: 1
+  config:
+    connector.class: "io.debezium.connector.postgresql.PostgresConnector"
+    plugin.name: "pgoutput"
+    database.hostname: "<REPLACE WITH DATABASE HOSTNAME>"
+    database.port: "5432"
+    database.user: "debezium"
+    database.password: "debezium"
+    database.dbname: "globex"
+    topic.prefix: "globex.updates"
+    decimal.handling.mode: "string"
+    schema.include.list: "public"
+    table.include.list: "public.customer,public.orders,public.line_item"
+    topic.creation.default.replication.factor: 2
+    topic.creation.default.partitions: 1
