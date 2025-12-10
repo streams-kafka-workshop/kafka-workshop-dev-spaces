@@ -7,7 +7,7 @@ package com.kafka.tutorial;
 public class KafkaConfig {
     
     // Bootstrap server address for OpenShift Kafka cluster
-    public static final String BOOTSTRAP_SERVERS = "kafka-kafka-bootstrap.kafka-user1.svc.cluster.local:9092";
+    public static final String BOOTSTRAP_SERVERS = "<REPLACE_WITH_YOUR_BOOTSTRAP_ADDRESS>";
     
     // Default topic name for the tutorial
     public static final String DEFAULT_TOPIC = "tutorial-topic";
