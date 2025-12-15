@@ -14,6 +14,6 @@ public class Config {
     public static final String ARTIFACT_ID = "schema-demo";  // Match topic name
     public static final String ARTIFACT_VERSION = "1";
     public static final String TOPIC_NAME = "schema-demo";
-    public static final String BOOTSTRAP_SERVERS = "kafka-kafka-bootstrap.kafka-user1.svc.cluster.local:9092";
+    public static final String BOOTSTRAP_SERVERS = "<REPLACE_WITH_BOOTSTRAP_SERVER_ADDRESS>";
 }
 
